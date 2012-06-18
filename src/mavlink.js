@@ -42,9 +42,9 @@ var mavlink = function(sysid, compid, version, definitions) {
 	//Definitions to load, default to common and APM
 	var defs = definitions || ["common", "ardupilotmega"];
 	
-	//ID's
-	this.sysid = sysid;
-	this.compid = compid;
+	//ID's, default to zeros which mean return all messages (but cannot transmit)
+	this.sysid = sysid || 0;
+	this.compid = compid || 0;
 	
 	//Create receive message buffer
 	this.buffer = new Buffer(512);
@@ -350,10 +350,17 @@ mavlink.prototype.parseChar = function(ch) {
 			//update counter
 			this.lastCounter = this.buffer[2];
 			
-			//fire an event with the message data
+			//use message object to parse headers
 			var message = new mavlinkMessage(this.buffer);
-			this.emit("message", message);
-			this.emit(this.getMessageName(this.buffer[5]), message, this.decodeMessage(message));
+			
+			//if system and component ID's dont match, ignore message. Alternatively if zeros were specified we return everything.
+			if ((this.sysid == 0 && this.compid == 0) || (message.system == this.sysid && message.component == this.compid)) {
+				//fire an event with the message data
+				this.emit("message", message);
+				
+				//fire additional event for specific message type
+				this.emit(this.getMessageName(this.buffer[5]), message, this.decodeMessage(message));
+			}
 		} else {
 			//If checksum fails, fire an event with some debugging information. Message ID, Message Checksum (XML), Calculated Checksum, Received Checksum
 			this.emit("checksumFail", this.buffer[5], this.messageChecksums[this.buffer[5]], this.calculateChecksum(crc_buf), this.buffer.readUInt16LE(this.messageLength+6));
@@ -540,6 +547,11 @@ mavlink.prototype.decodeMessage = function(message) {
 //		'yawspeed':0.6
 //	}, callback);
 mavlink.prototype.createMessage = function(msgid, data, cb) { 
+	//if ID's are zero we can't send data
+	if (this.sysid == 0 && this.compid == 0) {
+		console.log("System and component ID's are zero, cannot create message!");
+	}
+	
 	var id = msgid;
 	
 	//Is message id numerical? If not then look it up 
