@@ -1,0 +1,24 @@
+{
+  "name": "mavlink",
+  "version": "1.0.0",
+  "description": "Encode and decode MAVLink messages",
+  "main": "src/mavlink.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omcaree/node-mavlink.git"
+  },
+  "keywords": [
+    "node.js",
+    "mavlink"
+  ],
+  "dependencies": {
+	"xml2js": ""
+  },
+  "author": "Owen McAree",
+  "license": "BSD",
+  "readmeFilename": "Readme.md",
+  "gitHead": "c30f8a63ca6a1ebc1669fefcd07bb3780540e41b"
+}
