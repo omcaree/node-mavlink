@@ -1,4 +1,4 @@
-node-mavlink - A Node.js module for encoding/decoding MAVLink messages
+A Node.js module for encoding/decoding MAVLink messages
 ======================================================================
 
 This module for Node.JS allows you to transmit and receive MAVLink encoded messages. [MAVLink](http://qgroundcontrol.org/mavlink/start) is a lightweight message marshalling system designed for Micro Aerial Vehicles (MAVs) which efficiently encodes data in to binary packets to be transmnitted over serial or network connection.
@@ -30,6 +30,8 @@ var mavlink = require('mavlink');
 
 var myMAV = new mavlink(1,1);
 ```
+
+If you wish to receive all incoming messages, regardless of system and component IDs, set them both to 0. Note that if they are set to zero you will be unable to encode/send messages.
 
 Additional arguments to the constructor are available to specify which version of MAVLink to use and which message definitions to load. A full constructor call would be
 ```
