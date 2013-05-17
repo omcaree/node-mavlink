@@ -36,6 +36,8 @@ var mavlinkMessage = function(buffer) {
 
 
 var mavlink = function(sysid, compid, version, definitions) {
+	EventEmitter.call(this);
+
 	//MAVLink Version, default to v1.0
 	this.version = version || "v1.0";
 	
@@ -79,7 +81,13 @@ var mavlink = function(sysid, compid, version, definitions) {
 	this.lastCounter = 0;
 };
 
-mavlink.prototype = new EventEmitter;
+mavlink.super_ = EventEmitter;
+mavlink.prototype = Object.create(EventEmitter.prototype, {
+    constructor: {
+        value: mavlink,
+        enumerable: false
+    }
+});
 
 //Add new definitions to the array
 mavlink.prototype.addDefinition = function(definition) {
