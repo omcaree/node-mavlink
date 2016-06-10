@@ -146,3 +146,15 @@ The events emitted by node-mavlink are:
 In addition to these events, each message received emits an event corresponding to the message type. For example on receipt of a GPS_RAW_INT message an event named "GPS_RAW_INT" is emitted. These events have both the message object passed as first argument along with an object containing the decoded fields. An example of this is given in the Parsing Data section above. 
 
 These message specific events allow you to tailor certain behaviours to certain message types, whilst ignoring other messages. For example, updating the aim of a tracking antenna whenever new position information is available.
+
+Enums
+-----
+You can acces enums by their names or values, using enumsByName or enumsByValue.
+
+Make sure to put ".value" for enumsByName and ".name" for enumsByValue at the end of each statements.
+```
+var command = myMAV.enumsByName.MAV_CMD.MAV_CMD_NAV_TAKEOFF.value;
+
+var sensorType = 1 //MAV_DISTANCE_SENSOR_ULTRASOUND
+var senorName = myMAV.enumsByValue.MAV_DISTANCE_SENSOR[sensorType].name;
+```
