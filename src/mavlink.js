@@ -61,6 +61,8 @@ var mavlink = function(sysid, compid, version, definitions) {
 	this.messagesByID = new Array(255);
 	this.messagesByName = new Object();
 	this.enums = new Array();
+	this.enumsByName = new Object();
+	this.enumsByValue = new Object();
 	
 	//Add definitions to be loaded
 	for (var i = 0; i<defs.length; i++) {
@@ -109,6 +111,44 @@ mavlink.prototype.addMessage = function(message) {
 //Add new enum to enums array
 mavlink.prototype.addEnum = function(en) {
 	this.enums[this.enums.length] = en;
+	enum_name = en.$.name;
+	enum_keyval = {};
+	enum_valkey = {};
+	if (DEBUG)
+		console.log("MAVLink: Start adding " + en.$.name + " enum")
+
+	this.enumsByValue[enum_name] = this.enumsByValue[enum_name] || {};
+	this.enumsByName[enum_name] = this.enumsByName[enum_name] || {};
+	for(var i = 0; i < en.entry.length; i++) {
+		var value = Number(en.entry[i].$.value) || i;
+		var key = en.entry[i].$.name;
+		if (DEBUG)
+			console.log("  Adding " + en.entry[i].$.name);
+
+		enum_keyval[key] = {value: value};
+		for (var k in en.entry[i]) {
+			if (k !== '$' && k !== 'name')
+				enum_keyval[key][k] = en.entry[i][k];
+		}
+
+		enum_valkey[value] = {name: key};
+		for (var k in en.entry[i]) {
+			if (k !== '$' && k !== 'value')
+				enum_valkey[value][k] = en.entry[i][k];
+		}
+	}
+
+	for (key in enum_valkey) {
+		this.enumsByValue[enum_name][key] = enum_valkey[key];
+	}
+	this.enumsByValue[enum_name][key].description =
+		(this.enumsByValue[enum_name][key].description || []).concat(en.description);
+	for (key in enum_keyval) {
+		this.enumsByName[enum_name][key] = enum_keyval[key];
+	}
+	this.enumsByName[enum_name][key].description =
+		(this.enumsByName[enum_name][key].description || []).concat(en.description);
+
 	if (DEBUG) {
 		console.log("MAVLink: Added " + en.$.name + " enum");
 	}
@@ -583,7 +623,7 @@ mavlink.prototype.createMessage = function(msgid, data, cb) {
 	for (var i = 0; i < message.field.length; i++) {
 		//If we don't have data for a field quit out with an error
 		if (data[message.field[i].$.name] === undefined) {
-			console.log("MAVLink: No data supplied for '" + message.field[i].$.name + "'");
+			console.log("MAVLink: No data supplied for '" + message.field[i].$.name + "' in " + message.$.name);
 			return;
 		}
 		
