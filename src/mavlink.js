@@ -554,8 +554,10 @@ mavlink.prototype.decodeMessage = function(message) {
 //		'pitchspeed':0.5,
 //		'yawspeed':0.6
 //	}, callback);
-mavlink.prototype.createMessage = function(msgid, data, cb) { 
-	//if ID's are zero we can't send data
+mavlink.prototype.createMessage = function(msgid, data, sysid, cb) { 
+  //if ID's are zero we can't send data
+  if (sysid == 0)
+    sysid = this.sysid;
 	if (this.sysid == 0 && this.compid == 0) {
 		console.log("System and component ID's are zero, cannot create message!");
 	}
@@ -607,7 +609,7 @@ mavlink.prototype.createMessage = function(msgid, data, cb) {
 	msgBuf[0] = this.startCharacter();
 	msgBuf[1] = message.payloadLength;
 	msgBuf[2] = this.sequence;
-	msgBuf[3] = this.sysid;
+	msgBuf[3] = sysid;
 	msgBuf[4] = this.compid;
 	msgBuf[5] = id;
 	
