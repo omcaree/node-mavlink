@@ -1137,13 +1137,6 @@
           <message id="39" name="MISSION_ITEM">
                <description>Message encoding a mission item. This message is emitted to announce
                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See also http://qgroundcontrol.org/mavlink/waypoint_protocol.</description>
-               <field type="uint8_t" name="target_system">System ID</field>
-               <field type="uint8_t" name="target_component">Component ID</field>
-               <field type="uint16_t" name="seq">Sequence</field>
-               <field type="uint8_t" name="frame">The coordinate system of the MISSION. see MAV_FRAME in mavlink_types.h</field>
-               <field type="uint16_t" name="command">The scheduled action for the MISSION. see MAV_CMD in common.xml MAVLink specs</field>
-               <field type="uint8_t" name="current">false:0, true:1</field>
-               <field type="uint8_t" name="autocontinue">autocontinue to next wp</field>
                <field type="float" name="param1">PARAM1 / For NAV command MISSIONs: Radius in which the MISSION is accepted as reached, in meters</field>
                <field type="float" name="param2">PARAM2 / For NAV command MISSIONs: Time that the MAV should stay inside the PARAM1 radius before advancing, in milliseconds</field>
                <field type="float" name="param3">PARAM3 / For LOITER command MISSIONs: Orbit to circle around the MISSION, in meters. If positive the orbit direction should be clockwise, if negative the orbit direction should be counter-clockwise.</field>
@@ -1151,6 +1144,13 @@
                <field type="float" name="x">PARAM5 / local: x position, global: latitude</field>
                <field type="float" name="y">PARAM6 / y position: global: longitude</field>
                <field type="float" name="z">PARAM7 / z position: global: altitude</field>
+               <field type="uint16_t" name="seq">Sequence</field>
+               <field type="uint16_t" name="command">The scheduled action for the MISSION. see MAV_CMD in common.xml MAVLink specs</field>
+               <field type="uint8_t" name="target_system">System ID</field>
+               <field type="uint8_t" name="target_component">Component ID</field>
+               <field type="uint8_t" name="frame">The coordinate system of the MISSION. see MAV_FRAME in mavlink_types.h</field>
+               <field type="uint8_t" name="current">false:0, true:1</field>
+               <field type="uint8_t" name="autocontinue">autocontinue to next wp</field>
           </message>
           <message id="40" name="MISSION_REQUEST">
                <description>Request the information of the mission item with the sequence number seq. The response of the system to this message should be a MISSION_ITEM message. http://qgroundcontrol.org/mavlink/waypoint_protocol</description>
@@ -1175,9 +1175,9 @@
           </message>
           <message id="44" name="MISSION_COUNT">
                <description>This message is emitted as response to MISSION_REQUEST_LIST by the MAV and to initiate a write transaction. The GCS can then request the individual mission item based on the knowledge of the total number of MISSIONs.</description>
+               <field type="uint16_t" name="count">Number of mission items in the sequence</field>
                <field type="uint8_t" name="target_system">System ID</field>
                <field type="uint8_t" name="target_component">Component ID</field>
-               <field type="uint16_t" name="count">Number of mission items in the sequence</field>
           </message>
           <message id="45" name="MISSION_CLEAR_ALL">
                <description>Delete all mission items at once.</description>
@@ -1429,6 +1429,19 @@
              <field type="uint8_t" name="mode_switch">Flight mode switch position, 0.. 255</field>
              <field type="uint8_t" name="manual_override_switch">Override mode switch position, 0.. 255</field>
          </message>
+         <message id="83" name="ATTITUDE_TARGET">
+             <description>Set the vehicle attitude and body angular rates</description>
+             <field type="uint32_t" name="time_boot_ms">Timestamp in milliseconds since system boot</field>
+             <field type="float" name="q1">Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)</field>
+             <field type="float" name="q2">Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)</field>
+             <field type="float" name="q3">Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)</field>
+             <field type="float" name="q4">Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)</field>
+             <field type="float" name="body_roll_rate">Desired roll rate in radians per second</field>
+             <field type="float" name="body_pitch_rate">Desired pitch rate in radians per second</field>
+             <field type="float" name="body_yaw_rate">Desired yaw rate in radians per second</field>
+             <field type="float" name="thrust">Collective thrust, normalized to 0 .. 1</field>
+             <field type="uint8_t" name="type_mask">Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 7: reserved, bit 8: attitude</field>
+         </message>
           <message id="89" name="LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET">
                <description>The offset in X, Y, Z and yaw between the LOCAL_POSITION_NED messages of MAV X and the global coordinate frame in NED coordinates. Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)</description>
                <field type="uint32_t" name="time_boot_ms">Timestamp (milliseconds since system boot)</field>
@@ -1565,21 +1578,40 @@
              <field type="char[240]" name="dir_path">Directory path to list</field>
              <field type="uint8_t" name="flags">RESERVED</field>
          </message>
-         <message id="112" name="FILE_TRANSFER_RES">
-             <description>File transfer result</description>
-             <field type="uint64_t" name="transfer_uid">Unique transfer ID</field>
-             <field type="uint8_t" name="result">0: OK, 1: not permitted, 2: bad path / file name, 3: no space left on device</field>
+         <message id="112" name="CAMERA_TRIGGER">
+             <description>Camera-IMU triggering and synchronisation message</description>
+             <field type="uint64_t" name="transfer_uid">Timestamp for the image frame in microseconds</field>
+             <field type="uint32_t" name="seq">Image frame sequence</field>
+         </message>
+         <message id="141" name="ALTITUDE">
+             <description>Camera-IMU triggering and synchronisation message</description>
+             <field type="uint64_t" name="time_usec">Timestamp for the image frame in microseconds</field>
+             <field type="float" name="altitude_monotonic">This altitude measure is initialized on system boot and monotonic (it is never reset, but represents the local altitude change). The only guarantee on this field is that it will never be reset and is consistent within a flight. The recommended value for this field is the uncorrected barometric altitude at boot time. This altitude will also drift and vary between flights</field>
+             <field type="float" name="altitude_amsl">This altitude measure is strictly above mean sea level and might be non-monotonic (it might reset on events like GPS lock or when a new QNH value is set). It should be the altitude to which global altitude waypoints are compared to. Note that it is *not* the GPS altitude, however, most GPS modules already output AMSL by default and not the WGS84 altitude</field>
+             <field type="float" name="altitude_local">This is the local altitude in the local coordinate frame. It is not the altitude above home, but in reference to the coordinate origin (0, 0, 0). It is up-positive</field>
+             <field type="float" name="altitude_relative">This is the altitude above the home position. It resets on each change of the current home position</field>
+             <field type="float" name="altitude_terrain">This is the altitude above terrain. It might be fed by a terrain database or an altimeter. Values smaller than -1000 should be interpreted as unknown</field>
+             <field type="float" name="bottom_clearance">This is not the altitude, but the clear space below the system according to the fused clearance estimate. It generally should max out at the maximum range of e.g. the laser altimeter. It is generally a moving target. A negative value indicates no measurement available</field>
          </message>
          <message id="147" name="BATTERY_STATUS">
                <description>Transmitte battery informations for a accu pack.</description>
-               <field type="uint8_t" name="accu_id">Accupack ID</field>
+               <field type="int32_t" name="current_consumed">Current consumed</field>
+               <field type="int32_t" name="energy_consumed">Energy consumed</field>
+               <field type="int16_t" name="temperature">Temperature</field>
                <field type="uint16_t" name="voltage_cell_1">Battery voltage of cell 1, in millivolts (1 = 1 millivolt)</field>
                <field type="uint16_t" name="voltage_cell_2">Battery voltage of cell 2, in millivolts (1 = 1 millivolt), -1: no cell</field>
                <field type="uint16_t" name="voltage_cell_3">Battery voltage of cell 3, in millivolts (1 = 1 millivolt), -1: no cell</field>
                <field type="uint16_t" name="voltage_cell_4">Battery voltage of cell 4, in millivolts (1 = 1 millivolt), -1: no cell</field>
                <field type="uint16_t" name="voltage_cell_5">Battery voltage of cell 5, in millivolts (1 = 1 millivolt), -1: no cell</field>
                <field type="uint16_t" name="voltage_cell_6">Battery voltage of cell 6, in millivolts (1 = 1 millivolt), -1: no cell</field>
+               <field type="uint16_t" name="voltage_cell_7">Battery voltage of cell 7, in millivolts (1 = 1 millivolt), -1: no cell</field>
+               <field type="uint16_t" name="voltage_cell_8">Battery voltage of cell 8, in millivolts (1 = 1 millivolt), -1: no cell</field>
+               <field type="uint16_t" name="voltage_cell_9">Battery voltage of cell 9, in millivolts (1 = 1 millivolt), -1: no cell</field>
+               <field type="uint16_t" name="voltage_cell_10">Battery voltage of cell 10, in millivolts (1 = 1 millivolt), -1: no cell</field>
                <field type="int16_t" name="current_battery">Battery current, in 10*milliamperes (1 = 10 milliampere), -1: autopilot does not measure the current</field>
+               <field type="uint8_t" name="accu_id">Accupack ID</field>
+               <field type="uint8_t" name="BatteryFunction">Battery function</field>
+               <field type="uint8_t" name="Type">Type</field>
                <field type="int8_t" name="battery_remaining">Remaining battery energy: (0%: 0, 100%: 100), -1: autopilot does not estimate the remaining battery</field>
           </message>
           <message id="148" name="SETPOINT_8DOF">
@@ -1605,6 +1637,11 @@
                <field type="float" name="rot_z">Rotational Component in z</field>
           </message>
           <!-- MESSAGE IDs 150 - 240: Space for custom messages in individual projectname_messages.xml files -->
+          <message id="245" name="EXTENDED_SYS_STATE">
+               <description>Send raw controller memory. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.</description>
+               <field type="uint8_t" name="vtol_state">The VTOL state if applicable. Is set to MAV_VTOL_STATE_UNDEFINED if UAV is not in VTOL configuration</field>
+               <field type="uint8_t" name="landed_state">The landed state. Is set to MAV_LANDED_STATE_UNDEFINED if landed state is unknown.</field>
+          </message>
           <message id="249" name="MEMORY_VECT">
                <description>Send raw controller memory. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.</description>
                <field type="uint16_t" name="address">Starting address of the debug variables</field>
