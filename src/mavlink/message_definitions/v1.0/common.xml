@@ -1572,11 +1572,16 @@
              <field type="uint32_t" name="file_size">File size in bytes</field>
              <field type="uint8_t" name="flags">RESERVED</field>
          </message>
-         <message id="111" name="FILE_TRANSFER_DIR_LIST">
+         <!-- <message id="111" name="FILE_TRANSFER_DIR_LIST">
              <description>Get directory listing</description>
              <field type="uint64_t" name="transfer_uid">Unique transfer ID</field>
              <field type="char[240]" name="dir_path">Directory path to list</field>
              <field type="uint8_t" name="flags">RESERVED</field>
+         </message> -->
+         <message id="111" name="TIME_SYNC">
+             <description>Time synchronization message</description>
+             <field type="uint64_t" name="tc1">Time sync timestamp 1</field>
+             <field type="uint64_t" name="ts1">Time sync timestamp 2</field>
          </message>
          <message id="112" name="CAMERA_TRIGGER">
              <description>Camera-IMU triggering and synchronisation message</description>
