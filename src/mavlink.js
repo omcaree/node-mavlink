@@ -650,6 +650,20 @@ mavlink.prototype.bufferField = function(buf, offset, field, value) {
 //Decode an incomming message in to its individual fields
 mavlink.prototype.decodeMessage = function(message) {
 	
+	var param_data_type_dict = {		
+    1:'uint8_t',		
+    2:'int8_t',		
+    3:'uint16_t',		
+    4:'int16_t',		
+    5:'uint32_t',		
+    6:'int32_t',		
+    7:'uint64_t',		
+    8:'int64_t',		
+    9:'float',		
+    10:'double'		
+    		
+	};
+	
   //determine the fields
   if (this.messagesByID[message.id] == undefined)
   {
@@ -677,6 +691,13 @@ mavlink.prototype.decodeMessage = function(message) {
 		//loop over all elements in field and read from buffer
 		for (var j = 0; j<fields[i].arrayLength; j++) {
 			var val = 0;
+
+			if (message.id == 22 && fields[i].$.name == 'param_value') {		
+				// console.log(fields[i].$.name + " " + fields[i].$.type + " " + offset + " " + fields[i].typeLength);		
+				param_type_index = message.payload.readUInt8(24);		
+				fieldTypeName = param_data_type_dict[param_type_index];		
+			}
+
 			switch (fieldTypeName){
 				case 'float':
 					val = message.payload.readFloatLE(offset);
@@ -752,7 +773,22 @@ mavlink.prototype.decodeMessage = function(message) {
 //		'pitchspeed':0.5,
 //		'yawspeed':0.6
 //	}, callback);
-mavlink.prototype.createMessage = function(msgid, data, sysid, cb) { 
+
+mavlink.prototype.createMessage = function(msgid, data, sysid, cb) {		
+  var param_data_type_dict = {		
+    1:'uint8_t',		
+    2:'int8_t',		
+    3:'uint16_t',		
+    4:'int16_t',		
+    5:'uint32_t',		
+    6:'int32_t',		
+    7:'uint64_t',		
+    8:'int64_t',		
+    9:'float',		
+    10:'double'		
+    		
+	};		
+	
   //if ID's are zero we can't send data
   if (sysid == 0)
     sysid = this.sysid;
@@ -785,6 +821,10 @@ mavlink.prototype.createMessage = function(msgid, data, sysid, cb) {
 		if (data[message.field[i].$.name] === undefined) {
 			console.log("MAVLink: No data supplied for '" + message.field[i].$.name + "'");
 			return;
+		}
+		
+		if (msgid == 'PARAM_SET' &&  message.field[i].$.name == 'param_value') {		
+			message.field[i].$.type = param_data_type_dict[data['param_type']];		
 		}
 		
 		//If we have data, add it to the buffer
