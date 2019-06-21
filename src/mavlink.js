@@ -311,6 +311,191 @@ mavlink.prototype.startCharacter = function() {
 	}
 }
 
+mavlink.prototype.getCrcExtraForId  = function(id)
+{
+  var checksum = 0;
+  switch (id) {
+    case 0: checksum =  50; break;
+    case 1: checksum =  124; break;
+    case 2: checksum =  137; break;
+    case 4: checksum =  237; break;
+    case 5: checksum =  217; break;
+    case 6: checksum =  104; break;
+    case 7: checksum =  119; break;
+    case 11: checksum =  89; break;
+    case 20: checksum =  214; break;
+    case 21: checksum =  159; break;
+    case 22: checksum =  220; break;
+    case 23: checksum =  168; break;
+    case 24: checksum =  24; break;
+    case 25: checksum =  23; break;
+    case 26: checksum =  170; break;
+    case 27: checksum =  144; break;
+    case 28: checksum =  67; break;
+    case 29: checksum =  115; break;
+    case 30: checksum =  39; break;
+    case 31: checksum =  246; break;
+    case 32: checksum =  185; break;
+    case 33: checksum =  104; break;
+    case 34: checksum =  237; break;
+    case 35: checksum =  244; break;
+    case 36: checksum =  222; break;
+    case 37: checksum =  212; break;
+    case 38: checksum =  9; break;
+    case 39: checksum =  254; break;
+    case 40: checksum =  230; break;
+    case 41: checksum =  28; break;
+    case 42: checksum =  28; break;
+    case 43: checksum =  132; break;
+    case 44: checksum =  221; break;
+    case 45: checksum =  232; break;
+    case 46: checksum =  11; break;
+    case 47: checksum =  153; break;
+    case 48: checksum =  41; break;
+    case 49: checksum =  39; break;
+    case 50: checksum =  78; break;
+    case 54: checksum =  15; break;
+    case 55: checksum =  3; break;
+    case 61: checksum =  153; break;
+    case 62: checksum =  183; break;
+    case 63: checksum =  51; break;
+    case 64: checksum =  59; break;
+    case 65: checksum =  118; break;
+    case 66: checksum =  148; break;
+    case 67: checksum =  21; break;
+    case 69: checksum =  243; break;
+    case 70: checksum =  124; break;
+    case 73: checksum =  38; break;
+    case 74: checksum =  20; break;
+    case 75: checksum =  158; break;
+    case 76: checksum =  152; break;
+    case 77: checksum =  143; break;
+    case 81: checksum =  106; break;
+    case 82: checksum =  49; break;
+    case 83: checksum =  22; break;
+    case 84: checksum =  143; break;
+    case 85: checksum =  140; break;
+    case 86: checksum =  5; break;
+    case 87: checksum =  150; break;
+    case 89: checksum =  231; break;
+    case 90: checksum =  183; break;
+    case 91: checksum =  63; break;
+    case 92: checksum =  54; break;
+    case 100: checksum =  175; break;
+    case 101: checksum =  102; break;
+    case 102: checksum =  158; break;
+    case 103: checksum =  208; break;
+    case 104: checksum =  56; break;
+    case 105: checksum =  93; break;
+    case 106: checksum =  138; break;
+    case 107: checksum =  108; break;
+    case 108: checksum =  32; break;
+    case 109: checksum =  185; break;
+    case 110: checksum =  84; break;
+    case 111: checksum =  34; break;
+    case 112: checksum =  174; break;
+    case 113: checksum =  124; break;
+    case 114: checksum =  237; break;
+    case 115: checksum =  4; break;
+    case 116: checksum =  76; break;
+    case 117: checksum =  128; break;
+    case 118: checksum =  56; break;
+    case 119: checksum =  116; break;
+    case 120: checksum =  134; break;
+    case 121: checksum =  237; break;
+    case 122: checksum =  203; break;
+    case 123: checksum =  250; break;
+    case 124: checksum =  87; break;
+    case 125: checksum =  203; break;
+    case 126: checksum =  220; break;
+    case 127: checksum =  25; break;
+    case 128: checksum =  226; break;
+    case 129: checksum =  46; break;
+    case 130: checksum =  29; break;
+    case 131: checksum =  223; break;
+    case 132: checksum =  85; break;
+    case 133: checksum =  6; break;
+    case 134: checksum =  229; break;
+    case 135: checksum =  203; break;
+    case 136: checksum =  1; break;
+    case 137: checksum =  195; break;
+    case 138: checksum =  109; break;
+    case 139: checksum =  168; break;
+    case 140: checksum =  181; break;
+    case 141: checksum =  47; break;
+    case 142: checksum =  72; break;
+    case 143: checksum =  131; break;
+    case 146: checksum =  103; break;
+    case 147: checksum =  154; break;
+    case 148: checksum =  178; break;
+    case 149: checksum =  200; break;
+    case 241: checksum =  90; break;
+    case 242: checksum =  104; break;
+    case 243: checksum =  85; break;
+    case 244: checksum =  95; break;
+    case 245: checksum =  130; break;
+    case 246: checksum =  158; break;
+    case 248: checksum =  8; break;
+    case 249: checksum =  204; break;
+    case 250: checksum =  49; break;
+    case 251: checksum =  170; break;
+    case 252: checksum =  44; break;
+    case 253: checksum =  83; break;
+    case 254: checksum =  86; break;
+    case 150: checksum =  134; break;
+    case 151: checksum =  219; break;
+    case 152: checksum =  208; break;
+    case 153: checksum =  188; break;
+    case 154: checksum =  84; break;
+    case 155: checksum =  22; break;
+    case 156: checksum =  19; break;
+    case 157: checksum =  21; break;
+    case 158: checksum =  134; break;
+    case 160: checksum =  78; break;
+    case 161: checksum =  68; break;
+    case 162: checksum =  189; break;
+    case 163: checksum =  127; break;
+    case 164: checksum =  154; break;
+    case 165: checksum =  21; break;
+    case 166: checksum =  21; break;
+    case 167: checksum =  144; break;
+    case 168: checksum =  1; break;
+    case 169: checksum =  234; break;
+    case 170: checksum =  73; break;
+    case 171: checksum =  181; break;
+    case 172: checksum =  22; break;
+    case 173: checksum =  83; break;
+    case 174: checksum =  167; break;
+    case 175: checksum =  138; break;
+    case 176: checksum =  234; break;
+    case 177: checksum =  240; break;
+    case 178: checksum =  47; break;
+    case 179: checksum =  189; break;
+    case 180: checksum =  52; break;
+    case 181: checksum =  174; break;
+    case 182: checksum =  229; break;
+    case 183: checksum =  85; break;
+    case 184: checksum =  159; break;
+    case 185: checksum =  186; break;
+    case 186: checksum =  72; break;
+    case 191: checksum =  92; break;
+    case 192: checksum =  36; break;
+    case 193: checksum =  71; break;
+    case 194: checksum =  98; break;
+    case 200: checksum =  134; break;
+    case 201: checksum =  205; break;
+    case 214: checksum =  69; break;
+    case 215: checksum =  101; break;
+    case 216: checksum =  50; break;
+    case 217: checksum =  202; break;
+    case 218: checksum =  17; break;
+    case 219: checksum =  162; break;
+    case 226: checksum =  207; break;
+    default: checksum =  0; break;
+  }
+  return (checksum&0xFF) ^ (checksum>>8)
+}
+
 mavlink.prototype.parseChar = function(ch) {
 	//If we have no data yet, look for start character
 	if (this.bufferIndex == 0 && ch == this.startCharacter()) {
@@ -341,13 +526,22 @@ mavlink.prototype.parseChar = function(ch) {
 			var crc_buf = new Buffer(this.messageLength+6);
 			this.buffer.copy(crc_buf,0,1,this.messageLength+6);
 			
-			//Add the message checksum on the end
-			crc_buf[crc_buf.length-1] = this.messageChecksums[this.buffer[5]];
+      if (this.buffer[5] == 42)
+      {
+        var rrr = 1
+      }
+        //Add the message checksum on the end
+      //the messageChecksums for some messages (147-BATTERY_STATUS for example is not calculated correctly, so I added is hardcoded in getCrcExtraForId)
+      //crc_buf[crc_buf.length-1] = this.messageChecksums[this.buffer[5]];
+      var vvv = this.messageChecksums[this.buffer[5]];
+      var val = this.getCrcExtraForId(this.buffer[5]);
+      crc_buf[crc_buf.length-1] = (val&0xFF) ^ (val>>8)
 		} else {
 			//Buffer for checksummable data
 			var crc_buf = new Buffer(this.messageLength+5);
 			this.buffer.copy(crc_buf,0,1,this.messageLength+6);
-		}
+    }
+    
 		
 		//Test the checksum
 		if (this.calculateChecksum(crc_buf) == this.buffer.readUInt16LE(this.messageLength+6)) {
@@ -456,7 +650,25 @@ mavlink.prototype.bufferField = function(buf, offset, field, value) {
 //Decode an incomming message in to its individual fields
 mavlink.prototype.decodeMessage = function(message) {
 	
-	//determine the fields
+	var param_data_type_dict = {		
+    1:'uint8_t',		
+    2:'int8_t',		
+    3:'uint16_t',		
+    4:'int16_t',		
+    5:'uint32_t',		
+    6:'int32_t',		
+    7:'uint64_t',		
+    8:'int64_t',		
+    9:'float',		
+    10:'double'		
+    		
+	};
+	
+  //determine the fields
+  if (this.messagesByID[message.id] == undefined)
+  {
+    return;
+  }
 	var fields = this.messagesByID[message.id].field;
 	
 	//initialise the output object and buffer offset
@@ -479,6 +691,13 @@ mavlink.prototype.decodeMessage = function(message) {
 		//loop over all elements in field and read from buffer
 		for (var j = 0; j<fields[i].arrayLength; j++) {
 			var val = 0;
+
+			if (message.id == 22 && fields[i].$.name == 'param_value') {		
+				// console.log(fields[i].$.name + " " + fields[i].$.type + " " + offset + " " + fields[i].typeLength);		
+				param_type_index = message.payload.readUInt8(24);		
+				fieldTypeName = param_data_type_dict[param_type_index];		
+			}
+
 			switch (fieldTypeName){
 				case 'float':
 					val = message.payload.readFloatLE(offset);
@@ -554,8 +773,25 @@ mavlink.prototype.decodeMessage = function(message) {
 //		'pitchspeed':0.5,
 //		'yawspeed':0.6
 //	}, callback);
-mavlink.prototype.createMessage = function(msgid, data, cb) { 
-	//if ID's are zero we can't send data
+
+mavlink.prototype.createMessage = function(msgid, data, sysid, cb) {		
+  var param_data_type_dict = {		
+    1:'uint8_t',		
+    2:'int8_t',		
+    3:'uint16_t',		
+    4:'int16_t',		
+    5:'uint32_t',		
+    6:'int32_t',		
+    7:'uint64_t',		
+    8:'int64_t',		
+    9:'float',		
+    10:'double'		
+    		
+	};		
+	
+  //if ID's are zero we can't send data
+  if (sysid == 0)
+    sysid = this.sysid;
 	if (this.sysid == 0 && this.compid == 0) {
 		console.log("System and component ID's are zero, cannot create message!");
 	}
@@ -587,6 +823,10 @@ mavlink.prototype.createMessage = function(msgid, data, cb) {
 			return;
 		}
 		
+		if (msgid == 'PARAM_SET' &&  message.field[i].$.name == 'param_value') {		
+			message.field[i].$.type = param_data_type_dict[data['param_type']];		
+		}
+		
 		//If we have data, add it to the buffer
 		this.bufferField(payloadBuf, offset, message.field[i], data[message.field[i].$.name]);
 		
@@ -607,7 +847,7 @@ mavlink.prototype.createMessage = function(msgid, data, cb) {
 	msgBuf[0] = this.startCharacter();
 	msgBuf[1] = message.payloadLength;
 	msgBuf[2] = this.sequence;
-	msgBuf[3] = this.sysid;
+	msgBuf[3] = sysid;
 	msgBuf[4] = this.compid;
 	msgBuf[5] = id;
 	
